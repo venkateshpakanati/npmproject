@@ -41,7 +41,12 @@ podTemplate(label: label, containers: [
             sh """
               pwd
               ls -lta
-              npm config list
+              npm config rm proxy
+              npm config rm https-proxy
+              unset HTTP_PROXY
+              unset HTTPS_PROXY
+              unset http_proxy
+              unset https_proxy
               node -v && npm -v && npm i
               npm run-script build           
             """
