@@ -41,7 +41,7 @@ podTemplate(label: label, containers: [
             sh """
               pwd
               ls -lta
-              npm config set proxy https://venkateshmaven.jfrog.io/artifactory/api/npm/npm-local/
+              npm config list
               node -v && npm -v && npm i
               npm run-script build           
             """
