@@ -1,11 +1,12 @@
 def label = "worker-${UUID.randomUUID().toString()}"
 
 podTemplate(label: label, containers: [ 
-  containerTemplate(name: 'node', image: 'node:9.11', command: 'cat', ttyEnabled: true,
+  containerTemplate(name: 'node', image: 'node:10.20.0', command: 'cat', ttyEnabled: true,
   envVars: [envVar(key: 'NPM_CONFIG_USERCONFIG', value: '/data/.npm/config/.npmrc')])],  
   volumes: [
        configMapVolume(configMapName: 'npm-settings', mountPath: '/data/.npm/config'),         
-    //   persistentVolumeClaim(claimName: 'npm-storage', mountPath: '/data/.npm')                
+    //   persistentVolumeClaim(claimName: 'npm-storage', mountPath: '/data/.npm')    
+        hostPathVolume(mountPath: '/data/.npm', hostPath: '/tmp')            
   ]
 ) {
   node(label) {
@@ -40,7 +41,7 @@ podTemplate(label: label, containers: [
             sh """
               pwd
               ls -lta
-              node -v && npm -v 
+              node -v && npm -v && npm i
               npm run-script build           
             """
       //    }  
