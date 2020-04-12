@@ -41,6 +41,8 @@ podTemplate(label: label, containers: [
             sh """
               pwd
               ls -lta
+              npm config set registry https://venkateshmaven.jfrog.io/artifactory/api/npm/npm-local/
+              npm login
               node -v && npm -v && npm i
               npm run-script build           
             """
