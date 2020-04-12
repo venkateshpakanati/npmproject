@@ -1,13 +1,11 @@
 def label = "worker-${UUID.randomUUID().toString()}"
 
 podTemplate(label: label, containers: [ 
-  containerTemplate(name: 'maven', image: 'maven:3.6.0-jdk-8-alpine', command: 'cat', ttyEnabled: true,
-  envVars: [envVar(key: 'MAVEN_CONFIG', value: '/home/jenkins/.m2')]),
-  containerTemplate(name: 'gradle', image: 'gradle:4.5.1-jdk9', command: 'cat', ttyEnabled: true)
-  ],
+  containerTemplate(name: 'node', image: 'node:9.11', command: 'cat', ttyEnabled: true,
+  envVars: [envVar(key: 'NPM_CONFIG_USERCONFIG', value: '/data/.npm/config/.npmrc')])],  
   volumes: [
-      configMapVolume(configMapName: 'settings-xml', mountPath: '/home/jenkins/.m2'),
-      hostPathVolume(mountPath: '/home/gradle/.gradle', hostPath: '/tmp/jenkins/.gradle')
+       script.secretVolume(secretName: 'npm-settings', mountPath: '/data/.npm/config'),           
+       script.persistentVolumeClaim(claimName: 'npm-storage', mountPath: '/data/.npm')                
   ]
 ) {
   node(label) {
@@ -33,7 +31,7 @@ podTemplate(label: label, containers: [
     
     stage('Build Code') {
        milestone ()
-       container('gradle') {
+       container('node') {
           unstash "code-stash"
           sh """
             pwd
@@ -45,16 +43,5 @@ podTemplate(label: label, containers: [
        }
     }   
 
-    stage('Run maven') {
-      milestone ()
-      container('maven') {
-       unstash "code-stash"
-       sh "cat /home/jenkins/.m2/settings.xml"
-       sh "mvn --version"
-      // sh "curl -k https://repo.maven.apache.org/maven2" 
-      // sh "mvn -B clean install -X"
-      }
-    }
-   
   }
 }
