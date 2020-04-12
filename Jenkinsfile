@@ -5,7 +5,7 @@ podTemplate(label: label, containers: [
   envVars: [envVar(key: 'NPM_CONFIG_USERCONFIG', value: '/data/.npm/config/.npmrc')])],  
   volumes: [
        configMapVolume(configMapName: 'npm-settings', mountPath: '/data/.npm/config'),         
-       persistentVolumeClaim(claimName: 'npm-storage', mountPath: '/data/.npm')                
+    //   persistentVolumeClaim(claimName: 'npm-storage', mountPath: '/data/.npm')                
   ]
 ) {
   node(label) {
