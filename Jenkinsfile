@@ -4,8 +4,8 @@ podTemplate(label: label, containers: [
   containerTemplate(name: 'node', image: 'node:9.11', command: 'cat', ttyEnabled: true,
   envVars: [envVar(key: 'NPM_CONFIG_USERCONFIG', value: '/data/.npm/config/.npmrc')])],  
   volumes: [
-       script.secretVolume(secretName: 'npm-settings', mountPath: '/data/.npm/config'),           
-       script.persistentVolumeClaim(claimName: 'npm-storage', mountPath: '/data/.npm')                
+       configMapVolume(configMapName: 'npm-settings', mountPath: '/data/.npm/config'),         
+       persistentVolumeClaim(claimName: 'npm-storage', mountPath: '/data/.npm')                
   ]
 ) {
   node(label) {
@@ -35,10 +35,9 @@ podTemplate(label: label, containers: [
           unstash "code-stash"
           sh """
             pwd
-            ls -lat
-            gradle build -g gradle-user-home --debug
-            ls -lrt
-            ls -lrt build
+            ls -lta
+            node -v && npm -v && npm i
+            npm run-script build           
             """
        }
     }   
