@@ -33,12 +33,17 @@ podTemplate(label: label, containers: [
        milestone ()
        container('node') {
           unstash "code-stash"
-          sh """
-            pwd
-            ls -lta
-            node -v && npm -v && npm i
-            npm run-script build           
+          def npmrcProps = readProperties file: '/data/.npm/config/.npmrc'
+          def registryAuth = npmrcProps['_auth']
+          println "${registryAuth}"
+     //     withEnv(["http_proxy=", "https_proxy=", "NO_PROXY="]) {
+            sh """
+              pwd
+              ls -lta
+              node -v && npm -v 
+              npm run-script build           
             """
+      //    }  
        }
     }   
 
