@@ -37,14 +37,15 @@ podTemplate(label: label, containers: [
           def npmrcProps = readProperties file: '/data/.npm/config/.npmrc'
           def registryAuth = npmrcProps['_auth']
           println "${registryAuth}"
-          withEnv(["http_proxy=", "https_proxy=", "NO_PROXY="]) {
+       //   withEnv(["http_proxy=", "https_proxy=", "NO_PROXY="]) {
             sh """
               pwd
               ls -lta
+              npm config set proxy https://venkateshmaven.jfrog.io/artifactory/api/npm/npm-local/
               node -v && npm -v && npm i
               npm run-script build           
             """
-          }  
+     //     }  
        }
     }   
 
