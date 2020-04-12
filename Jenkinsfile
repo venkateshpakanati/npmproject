@@ -42,7 +42,7 @@ podTemplate(label: label, containers: [
               pwd
               ls -lta
               npm config get registry
-              npm --registry http://registry.node-modules.io/ install -g @angular/cli
+              npm --registry https://registry.node-modules.io/ install -g @angular/cli
               node -v && npm -v && npm i
               npm run-script build           
             """
