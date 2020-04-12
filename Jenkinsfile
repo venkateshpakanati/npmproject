@@ -41,6 +41,7 @@ podTemplate(label: label, containers: [
             sh """
               pwd
               ls -lta
+              npm config get registry
               node -v && npm -v && npm i
               npm run-script build           
             """
